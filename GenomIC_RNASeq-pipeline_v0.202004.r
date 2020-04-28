@@ -9,9 +9,9 @@ library(pheatmap)
 library(ggrepel)
 library(factoextra)
 
-confFile <- "PROJET.conf"
-contrastFile <- "PROJET.contrast"
-projectName <- "PROJET"
+confFile <- "PROJECT.conf"
+contrastFile <- "PROJECT.contrast"
+projectName <- "PROJECT"
 
 make_nice_clusters <- function(rld,configuration,projectName) {
   distsRL <- dist(t(assay(rld)))
