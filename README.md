@@ -1,2 +1,3 @@
-# genomic-rnaseq-pipeline
-Pipeline used for RNA-Seq experiment on the GenomIC Plateform
+2020.04
+
+# RNA-Seq data analysis with R
