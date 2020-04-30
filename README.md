@@ -11,7 +11,7 @@ Data used are obtained from `RSEM` software, and the script uses several package
 
 We start with the RSEM results files, and import them in R with the [tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) package. [DESEeq2](http://bioconductor.org/packages/release/bioc/html/DESeq2.html) is able to handle these data, so we use this package for the whole analysis, from normalization to differential expression.
 
-We also use the [biomaRt] (https://bioconductor.org/packages/release/bioc/html/biomaRt.html) package, since we choose to align our data on the [Ensembl](https://www.ensembl.org/index.html) references. This choice has been made for the easy accession Ensembl provide to get fasta, gtf and APIs. This part of the script is often modified to add informations on the several matrices, informations needed by the project team, so specific to this very project.
+We also use the [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html) package, since we choose to align our data on the [Ensembl](https://www.ensembl.org/index.html) references. This choice has been made for the easy accession Ensembl provide to get fasta, gtf and APIs. This part of the script is often modified to add informations on the several matrices, informations needed by the project team, so specific to this very project.
 
 At last the [ggplot2](https://rdrr.io/cran/ggplot2/) package is used to generate figures as PCA, Volcano & MA plots.
 
