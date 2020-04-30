@@ -16,15 +16,19 @@ projectName <- "PROJECT"
 make_nice_clusters <- function(rld,configuration,projectName) {
   distsRL <- dist(t(assay(rld)))
   matDist <- as.matrix(distsRL)
-  hc <- hclust(distsRL)
   hmcol<- colorRampPalette(brewer.pal(9, 'GnBu'))(100)
   Conditions <- data.frame(configuration$Condition,row.names=configuration$Name)
   colnames(Conditions) <- c("condition")
-  nameClustering <- paste(projectName,"deseq2_Unsupervised_clustering_hclust-complete.png",sep="_")
+  nameClustering <- paste(projectName,"deseq2_Unsupervised_clustering_euclidean-complete.png",sep="_")
   png(filename=nameClustering,width=7 ,height=7, units="in",res = 600 ) 
-  pheatmap(matDist, clustering_distance_rows=distsRL, clustering_distance_cols=distsRL, col=hmcol, annotation_col = Conditions)
+  pheatmap(matDist, 
+           col=hmcol, 
+           annotation_col = Conditions,
+           show_rownames=F,
+           show_colnames=F)
   dev.off()
 }
+
 make_nice_pca <- function(dds,rld,projectName) {
   
   ntop <- 500
@@ -44,11 +48,11 @@ make_nice_pca <- function(dds,rld,projectName) {
   ggsave(filename=nameACP1, plot=pca1)
   
   nameACP2 <- paste(projectName,"_deseq2_Unsupervised_PCA_PC2vsPC3_top500varGenes.jpg",sep="")
-  pca2 <- ggplot(PCAdata,aes(x=PC2,y=PC3,col=condition,label=rownames(PCAdata))) + geom_point(aes(shape=condition, color=condition), size = 5) + geom_point() + geom_label_repel() + xlab(paste0("PC1: ",round(variance[1],1),"% variance")) + ylab(paste0("PC2: ",round(variance[2],1),"% variance"))
+  pca2 <- ggplot(PCAdata,aes(x=PC2,y=PC3,col=condition,label=rownames(PCAdata))) + geom_point(aes(shape=condition, color=condition), size = 5) + geom_point() + geom_label_repel() + xlab(paste0("PC2: ",round(variance[1],1),"% variance")) + ylab(paste0("PC3: ",round(variance[2],1),"% variance"))
   ggsave(filename=nameACP2, plot=pca2)
   
   nameACP3 <- paste(projectName,"_deseq2_Unsupervised_PCA_PC1vsPC3_top500varGenes.jpg",sep="")
-  pca3 <- ggplot(PCAdata,aes(x=PC1,y=PC3,col=condition,label=rownames(PCAdata))) + geom_point(aes(shape=condition, color=condition), size = 5) + geom_point() + geom_label_repel() + xlab(paste0("PC1: ",round(variance[1],1),"% variance")) + ylab(paste0("PC2: ",round(variance[2],1),"% variance"))
+  pca3 <- ggplot(PCAdata,aes(x=PC1,y=PC3,col=condition,label=rownames(PCAdata))) + geom_point(aes(shape=condition, color=condition), size = 5) + geom_point() + geom_label_repel() + xlab(paste0("PC1: ",round(variance[1],1),"% variance")) + ylab(paste0("PC3: ",round(variance[2],1),"% variance"))
   ggsave(filename=nameACP3, plot=pca3)
   
   nameACP_contrib <- paste(projectName,"_deseq2_Unsupervised_PCA_contribution.png",sep="")
@@ -91,7 +95,9 @@ make_nice_pca <- function(dds,rld,projectName) {
   #IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'hgnc_symbol','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
   #Mouse
   IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'mgi_symbol','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
-  
+  #Other
+  #IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'external_gene_name','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
+
   rownames(IDsWithNamesDesc) <- make.names(IDsWithNamesDesc$ensembl_gene_id, unique=TRUE)
   dataMerged <- merge(as.data.frame(countNorm),IDsWithNamesDesc,by="row.names",all.x=TRUE)
   nameNorm <- paste(projectName,"_deseq2_NormalizedMatrix.tsv",sep="")
@@ -157,7 +163,7 @@ make_nice_pca <- function(dds,rld,projectName) {
     #~ IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'hgnc_symbol','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
     # Mouse
     IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'mgi_symbol','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
-    # Bos Taurus
+    # Other
     #~ IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id','external_gene_name','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
     
     rownames(IDsWithNamesDesc) <- make.names(IDsWithNamesDesc$ensembl_gene_id, unique=TRUE)
