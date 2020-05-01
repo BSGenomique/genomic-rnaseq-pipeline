@@ -89,7 +89,7 @@ make_nice_pca <- function(dds,rld,projectName) {
   
 # Step 4: Save the normalized matrix
   countNorm<-counts(dds, normalized=TRUE)
-  ensemblIDs <- row.names
+  ensemblIDs <- row.names(countNorm)
   
   #Human
   #IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'hgnc_symbol','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
