@@ -48,11 +48,11 @@ make_nice_pca <- function(dds,rld,projectName) {
   ggsave(filename=nameACP1, plot=pca1)
   
   nameACP2 <- paste(projectName,"_deseq2_Unsupervised_PCA_PC2vsPC3_top500varGenes.jpg",sep="")
-  pca2 <- ggplot(PCAdata,aes(x=PC2,y=PC3,col=condition,label=rownames(PCAdata))) + geom_point(aes(shape=condition, color=condition), size = 5) + geom_point() + geom_label_repel() + xlab(paste0("PC2: ",round(variance[1],1),"% variance")) + ylab(paste0("PC3: ",round(variance[2],1),"% variance"))
+  pca2 <- ggplot(PCAdata,aes(x=PC2,y=PC3,col=condition,label=rownames(PCAdata))) + geom_point(aes(shape=condition, color=condition), size = 5) + geom_point() + geom_label_repel() + xlab(paste0("PC2: ",round(variance[2],1),"% variance")) + ylab(paste0("PC3: ",round(variance[3],1),"% variance"))
   ggsave(filename=nameACP2, plot=pca2)
   
   nameACP3 <- paste(projectName,"_deseq2_Unsupervised_PCA_PC1vsPC3_top500varGenes.jpg",sep="")
-  pca3 <- ggplot(PCAdata,aes(x=PC1,y=PC3,col=condition,label=rownames(PCAdata))) + geom_point(aes(shape=condition, color=condition), size = 5) + geom_point() + geom_label_repel() + xlab(paste0("PC1: ",round(variance[1],1),"% variance")) + ylab(paste0("PC3: ",round(variance[2],1),"% variance"))
+  pca3 <- ggplot(PCAdata,aes(x=PC1,y=PC3,col=condition,label=rownames(PCAdata))) + geom_point(aes(shape=condition, color=condition), size = 5) + geom_point() + geom_label_repel() + xlab(paste0("PC1: ",round(variance[1],1),"% variance")) + ylab(paste0("PC3: ",round(variance[3],1),"% variance"))
   ggsave(filename=nameACP3, plot=pca3)
   
   nameACP_contrib <- paste(projectName,"_deseq2_Unsupervised_PCA_contribution.png",sep="")
