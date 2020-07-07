@@ -141,6 +141,7 @@ make_nice_pca <- function(dds,rld,projectName) {
   make_nice_pca(dds,rld,projectName)
   
 # Step 8: Supervised analysis
+
   contrasteList <- read.table(contrastFile,header=FALSE,sep="\t",colClasses = c("character","character","character"))
   nComp <- nrow(contrasteList)
 
@@ -181,3 +182,19 @@ make_nice_pca <- function(dds,rld,projectName) {
 # RSEM    # Li, B., Dewey, C.N. RSEM: accurate transcript quantification from RNA-Seq data with or without a reference genome. BMC Bioinformatics 12, 323 (2011). https://doi.org/10.1186/1471-2105-12-323
 # DESeq2  # Love, M.I., Huber, W., Anders, S. (2014) Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology, 15:550. 10.1186/s13059-014-0550-8
 # ggplot2 # Wickham H (2016). ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York. ISBN 978-3-319-24277-4
+
+######
+#    Copyright (C) 2020  Benjamin Saintpierre - Plateforme GENOM'IC - Institut Cochin
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
