@@ -25,6 +25,14 @@ make_nice_clusters <- function(rld,configuration,projectName) {
            col=hmcol, 
            annotation_col = Conditions,
            show_rownames=F,
+           show_colnames=T)
+  dev.off()
+  nameClustering <- paste(projectName,"deseq2_Unsupervised_clustering_euclidean-complete_no-sampleNames.png",sep="_")
+  png(filename=nameClustering,width=7 ,height=7, units="in",res = 600 ) 
+  pheatmap(matDist, 
+           col=hmcol, 
+           annotation_col = Conditions,
+           show_rownames=F,
            show_colnames=F)
   dev.off()
 }
