@@ -158,7 +158,7 @@ make_nice_pca <- function(dds,rld,projectName) {
     ctrst <- unname(unlist(contrasteList[z,]))
     res <- results(dds, contrast=ctrst)
 
-    name <- paste(projectName,"_deseq2_results_contrast",ctrst[2],'vs',ctrst[3],sep="_")
+    name <- paste(projectName,"deseq2_results_contrast",ctrst[2],'vs',ctrst[3],sep="_")
     
     resLFC <- lfcShrink(dds, contrast=ctrst, res=res)
     nameMA <- paste(name,"MAplot.png",sep="_")
