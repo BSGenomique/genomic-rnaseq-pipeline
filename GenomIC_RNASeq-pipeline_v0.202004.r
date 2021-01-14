@@ -102,7 +102,7 @@ make_nice_pca <- function(dds,rld,projectName) {
   #Human
   #IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'hgnc_symbol','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
   #Mouse
-  IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'mgi_symbol','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
+  IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'mgi_symbol','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl, useCache = FALSE)
   #Other
   #IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'external_gene_name','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
 
@@ -171,7 +171,7 @@ make_nice_pca <- function(dds,rld,projectName) {
     # Human
     #~ IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'hgnc_symbol','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
     # Mouse
-    IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'mgi_symbol','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
+    IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'mgi_symbol','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl, useCache = FALSE)
     # Other
     #~ IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id','external_gene_name','description'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl)
     
