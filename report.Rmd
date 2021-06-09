@@ -1,5 +1,5 @@
 ---
-title: "Projet NGS20-117"
+title: "Projet NAME"
 author: "Plateforme GENOM'IC"
 output: html_document
 bibliography: biblio.bib
@@ -39,7 +39,7 @@ rsem-calculate-expression
 
 Pour votre projet, nous avons utilisé la référence suivante:
 
-> Ensembl release 101, Homo sapiens GRCh38
+> Ensembl release X, REFERENCE NAME
 
 Les fichiers de séquences (fasta) et d'annotations (gtf) sont disponibles sur cette base de données. Merci de faire attention à la version utilisée dans le cadre d'une réanalyse complète des données ou d'une comparaison avec d'autres données.
 
@@ -68,20 +68,18 @@ Les données sont directement importés des fichiers de sortie RSEM. Le design e
 Nous filtrons une partie des données que nous considérons comme non-représentatives et qui peuvent présenter un risque de biais. Chaque gène doit avoir un comptage supèrieur à 10, et ce dans au moins 3 échantillons. Ces filtres expliquent les différences que vous pourrez observer entre les données brutes et la matrice normalisée.
 
 ```
-  dds <- DESeqDataSetFromTximport(txi.rsem, configuration, ~Patient+Temps+Traitement)
+  dds <- DESeqDataSetFromTximport(txi.rsem, configuration, ~Condition)
   dds <- estimateSizeFactors(dds)
   idx <- rowSums( counts(dds, normalized=TRUE) >= 10 ) >= 3
   dds <- dds[idx,]
   dds <- DESeq(dds)
   
 ```
-Pour le moment l'aspect "Condition" (aggrégat de Traitement et Temps) de vos données n'est pa encore intégré au modèle. Les analyses non-supervisées doivent être le plus explicite possible afin de pouvoir déterminer avec précision les facteurs de variations de vos données.
-
 ```{r dds, echo=FALSE}
 summary(dds)
 ```
 
-Pour votre projet, 18504 annotations ont été retenues et seront traitées lors de l'analyse.
+Pour votre projet, X annotations ont été retenues et seront traitées lors de l'analyse.
 
 ## Normalisation des données
 
@@ -106,8 +104,6 @@ L'Analyse en Composantes Principales est une méthode de statistiques descriptiv
 knitr::include_graphics(c("PCA1.jpg","PCA2.jpg"))
 ``` 
 
-Les deux premières composantes semblent apporter une bonne séparation des échantillons en fonction du temps (PC1) ou du traitement (PC2).
-
 ### Clustering
 ```{r, echo=FALSE,out.width="49%", out.height="20%",fig.cap="Clustering hiérarchique",fig.show='hold',fig.align='center'}
 knitr::include_graphics("clustering.png")
@@ -117,19 +113,10 @@ Le clustering hérarchique présente des résultats cohérents avec les ACP pré
 
 ## Analyses supervisées
 
-Le design experimental de votre projet présente 2 facteurs: Traitements et Temps. Avant de traiter les interactions, nous avons analyser chaque groupe indépendant du reste, comme conseillé par les auteurs du package DESeq2.
-
-```
-  dds$Condition <- factor(paste0(dds$Traitement, dds$Temps))
-  design(dds) <- ~ Condition
-  dds <- DESeq(dds)
-```
 
 Une fois le design validé, nous utilisons la fonction `contrast` afin de garder un contrôle complet à la fois sur la comparaison, mais également pour faciliter la suite du script (génération des figures notamment). 
 
 L'hypothèse nulle spécifie qu'il n'existe pas de différence d'expression entre les deux groupes comparés, et cette hypothèse est vérifiée grâce à un test de Wald, qui fournit une statistique de test permettant d'établir une p-valeur pour chaque gène. Celle-ci indique la probablité d'obtenir une statistique de test au moins aussi extrême que la valeur observée. La p-valeur nous permet de conclure sur le rejet ou l'acceptation de l'hypothèse nulle.
-
-
 
 ```
 res <- results(dds, contrast=c("Condition","Groupe A Comparer","Référence"))
