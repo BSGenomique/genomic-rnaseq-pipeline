@@ -9,7 +9,7 @@ Data used are obtained from `RSEM` software, and the script uses several package
 
 ## Main Pipeline
 
-### Data & File configuration
+### Data & File configuration
 
 To get ready, you have to decompress the Renv_Archive.zip in the working directory, then load it in R with the restore function
 ```{r eval=FALSE}
@@ -53,7 +53,9 @@ A for loop is parsing the PROJECT.contrast file, to extract the good results mat
 ## Main packages
 
 RSEM    # Li, B., Dewey, C.N. RSEM: accurate transcript quantification from RNA-Seq data with or without a reference genome. BMC Bioinformatics 12, 323 (2011). https://doi.org/10.1186/1471-2105-12-323
+
 DESeq2  # Love, M.I., Huber, W., Anders, S. (2014) Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology, 15:550. 10.1186/s13059-014-0550-8
+
 ggplot2 # Wickham H (2016). ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York. ISBN 978-3-319-24277-4
 
 
