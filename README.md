@@ -13,9 +13,15 @@ To get ready, you have to decompress the Renv_Archive.zip in the working directo
 ```{r eval=FALSE}
 renv::restore()
 ```
-Once the environnement is loaded, with the librairies, please copy your RSEM files in your working directory, then edit the two PROJECT.conf and PROJECT.contrast as follow:
+Once the environnement is loaded, with the librairies, please copy your RSEM files in your working directory, then edit the two PROJECT.conf and PROJECT.contrast as follow, conserving the header.
 
-Table Header  | Second Header
-------------- | -------------
-Table Cell  | Cell 2
-Cell 3  | Cell 4 
+PROJECT.conf: add one column by Condition you want to add in your design
+
+File | Name | Condition
+------------- | ------------- | -------------
+RSEM Filename  | Sample name  | Condition, treatment, time
+
+PROJECT.contrast:
+
+Condition name  | Group to compare  | Control group
+------------- | ------------- | -------------
