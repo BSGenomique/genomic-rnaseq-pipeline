@@ -1,4 +1,4 @@
-2020.04
+2021.09
 
 # RNA-Seq data analysis with R
 Plateforme Genom'IC, Institut Cochin, Paris, France
@@ -7,24 +7,15 @@ This script is used on the Genom'IC plateform to analyse RNA-Seq data. It is the
 
 Data used are obtained from `RSEM` software, and the script uses several packages for differential analysis and figures creation. The script is based on [DESEeq2](http://bioconductor.org/packages/release/bioc/html/DESeq2.html) and [ggplot2](https://rdrr.io/cran/ggplot2/). 
 
-## Pipeline big lines
+## Main Pipeline
 
-We start with the RSEM results files, and import them in R with the [tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) package. [DESEeq2](http://bioconductor.org/packages/release/bioc/html/DESeq2.html) is able to handle these data, so we use this package for the whole analysis, from normalization to differential expression.
-
-We also use the [biomaRt](https://bioconductor.org/packages/release/bioc/html/biomaRt.html) package, since we choose to align our data on the [Ensembl](https://www.ensembl.org/index.html) references. This choice has been made for the easy accession Ensembl provide to get fasta, gtf and APIs. This part of the script is often modified to add informations on the several matrices, informations needed by the project team, so specific to this very project.
-
-At last the [ggplot2](https://rdrr.io/cran/ggplot2/) package is used to generate figures as PCA, Volcano & MA plots.
-
-## Packages
+To get ready, you have to decompress the Renv_Archive.zip in the working directory, then load it in R with the restore function
+```{r eval=FALSE}
+renv::restore()
 ```
-library(biomaRt)
-library(tximport)
-library(readr)
-library(DESeq2)
-library(reshape)
-library(ggplot2)
-library(RColorBrewer)
-library(pheatmap)
-library(ggrepel)
-library(factoextra)
-```
+Once the environnement is loaded, with the librairies, please copy your RSEM files in your working directory, then edit the two PROJECT.conf and PROJECT.contrast as follow:
+
+Table Header  | Second Header
+------------- | -------------
+Table Cell  | Cell 2
+Cell 3  | Cell 4 
