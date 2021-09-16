@@ -1,0 +1,162 @@
+---
+title: "Project NGS20-104"
+author: "Plateforme GENOM'IC"
+output: html_document
+bibliography: biblio.bib
+nocite: '@*'
+---
+
+
+## Softwares and Reference
+
+The plateform pipeline is using STAR (v2.7.6a) and RSEM (v1.3.1) to get the count files. These files are then exploited with the DESeq2 R package.
+
+```
+STAR 
+--genomeDir /path/to/STAR/reference/directory 
+--sjdbGTFfile /path/to/gtf
+--runThreadN 20 
+--readFilesIn /path/to/fastq/R1 /path/to/fastq/R2 
+--outFileNamePrefix $echantillon 
+--twopassMode Basic 
+--sjdbOverhang 74 
+--outSAMtype BAM SortedByCoordinate 
+--readFilesCommand zcat 
+--outSAMunmapped Within 
+--outFilterType BySJout 
+--quantMode TranscriptomeSAM
+```
+```
+rsem-calculate-expression 
+-p 20 
+--paired-end 
+--bam 
+--no-bam-output 
+/path/to/AlignedToTranscriptome/file
+/path/to/rsem-prepare-reference/files
+[sample-rsem-suffix]
+```
+
+For your project we used the following reference:
+
+> Ensembl release 101, Mus musculus GRCm38
+
+Les fichiers de séquences (fasta) et d'annotations (gtf) sont disponibles sur cette base de données. Merci de faire attention à la version utilisée dans le cadre d'une réanalyse complète des données ou d'une comparaison avec d'autres données.
+
+Sequences (fasta) and annotations (gtf) files are available on the Ensembl database, release 101. Be aware of the versions we used here, for any reproductibility issue.
+
+We also add the eGFP sequence and annotation for your project.
+
+# Alignment
+
+```{r, echo=FALSE,fig.cap="Contrôle qualité de l'alignement",fig.show='hold',fig.align='center'}
+knitr::include_graphics("QC_STAR.png")
+``` 
+
+
+# Analysis
+
+## Data & metadata
+
+The metadata have been set as follow:
+
+```{r paged.print=FALSE}
+configuration
+```
+
+
+## Création de l'objet DESeq
+
+The data files are directly imported. The experimental design depends on both the information provided for each sample, and the desired comparisons.
+
+We filter some of the data that we consider as non-representatives and that may present a risk of bias. Each gene must have a count greater than 10, in at least 3 samples. These filters explain the differences you can observe between the raw data and the normalized matrix.
+
+
+```
+  dds <- DESeqDataSetFromTximport(txi.rsem, configuration, ~Preparation + Condition)
+  dds <- estimateSizeFactors(dds)
+  idx <- rowSums( counts(dds, normalized=TRUE) >= 10 ) >= 3
+  dds <- dds[idx,]
+  dds <- DESeq(dds)
+  
+```
+```{r dds, echo=FALSE}
+summary(dds)
+```
+
+For your project, 18931 annotations have been selected for the analysis.
+
+## Normalisation des données
+
+The normalization method is internal to the DESeq2 package. This method normalizes the data so that samples can be compared with each other, taking into account sequencing depth and RNA composition.
+
+Warning! This data cannot be used to compare expressions within a sample. If you want to make such comparisons, please use the TPM columns of the raw files from RSEM.
+
+```{r, echo=FALSE,out.width="49%", out.height="20%",fig.cap="Effect of the normalization",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("boxplotRawCount.jpg","boxplotNormCount.jpg"))
+``` 
+
+Once the samples are normalized, we validate the absence of an atypical profile that could lead to the deletion of one or more samples.
+
+## Unsupervised analysis
+
+### PCA
+
+Principal Component Analysis is a descriptive statistics method that projects samples onto two axes according to their expression of the most variable 500 genes. Each axis is a component of a number of genes. The data used underwent a `rld <- rlog (dds, blind = TRUE)` transformation in order to improve clustering and moderate the variance around the mean.
+
+```{r, echo=FALSE,out.width="49%", out.height="20%",fig.cap="Principal Component Analysis, n=500",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("PCA1.jpg","PCA2.jpg"))
+``` 
+
+### Clustering
+```{r, echo=FALSE,out.width="49%", out.height="20%",fig.cap="Hierarchical clustering",fig.show='hold',fig.align='center'}
+knitr::include_graphics("clustering.png")
+``` 
+
+The herarchical clustering results are consistent with the PCA presented previously. We used the Euclidean distance and the full method to determine the dendogram. It is possible to change the methods by contacting us.
+
+### Removing "Date Effect"
+
+On the PCA results, on the PCA1 axe, we observe a preparation effect, the samples are clustering by date, and no by conditions. This is why we add the Preparation Date in the metadata, and in the experiment design (see corresponding sections above). Then we perform a new PCA computation with the limma::removeBatchEffect() function. The clustering result are much better:
+
+```{r, echo=FALSE,out.width="49%", out.height="20%",fig.cap="Principal Component Analysis, n=500",fig.show='hold',fig.align='center'}
+knitr::include_graphics(c("NGS21-104_deseq2_Unsupervised_PCA_PC1vsPC2_top500varGenes_BatchEffectRemoved_Preparation-color.png","NGS21-104_deseq2_Unsupervised_PCA_PC1vsPC2_top500varGenes_BatchEffectRemoved_Condition-color.png"))
+``` 
+
+## Supervised analysis
+
+Once the design has been validated (detection of a batch effect during the unsupervised analysis, as example), we use the `contrast` function in order to keep complete control both over the comparison, but also to facilitate the rest of the script (generation of figures in particular).
+
+The null hypothesis specifies that there is no difference in expression between the two groups compared, and this hypothesis is verified using a Wald test, which provides a test statistic for establishing a p-value for each gene. This indicates the probability of obtaining a test statistic at least as extreme as the observed value. The p-value allows us to conclude on the rejection or acceptance of the null hypothesis.
+```
+res <- results(dds, contrast=c("Condition","Group to compar","Reference"))
+```
+The more genes are tested, the higher the false positive rate (problem of multiple tests). Each p-value is therefore adjusted with the Benjamini-Hochberg method.
+
+By adding the information from Ensemble via the biomaRt package, the results matrix is completed and provided in .tsv format, readable with Excel or any spreadsheet.
+
+Example of the first 6 rows of the results matrix:
+
+```{r, paged.print=TRUE,echo=FALSE}
+paged_table(head(fullData),options = list(rownames.print=FALSE))
+```
+
+The columns are as follows:
+
+* Ensembl database identifier
+* Average count for all samples, after normalization
+* Log2 of expression ratio between groups
+* Standard deviation
+* Wald test statistics
+* raw p-value
+* adjusted p-value
+* Ensembl database identifier
+* Gene Symbol, often more relevant to biologists
+* A description, if available, of the gene
+* Set of standardized counts for samples
+  
+## Reproducibility
+
+```{r, paged.print=TRUE}
+sessionInfo()
+```
