@@ -37,7 +37,7 @@ During the data importation, there a filter to reduce the data size (and the res
 ### Normalization
 
 The normalization matrix is extracted from the `dds` object, and the `biomart` package is used to add information for each sample (gene names, description, and GO terms by default). If you need more informations, you can get the different attributes available with the `listAttributes(ensembl)` function, then modify the following line: 
-
+rtyèrty
 ```
   IDsWithNamesDesc <- getBM(attributes = c('ensembl_gene_id', 'mgi_symbol','description','go_id','name_1006'), filters = 'ensembl_gene_id', values = ensemblIDs, mart = ensembl,useCache = FALSE)
 ```
